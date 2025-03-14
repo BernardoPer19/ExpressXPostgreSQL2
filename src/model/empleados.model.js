@@ -64,14 +64,40 @@ export class ModelEmpleados {
       );
 
       if (rows.length === 0) {
-      throw new Error("No se encontró el empleado con el ID proporcionado.");
-    }
-
+        throw new Error("No se encontró el empleado con el ID proporcionado.");
+      }
 
       return rows[0];
     } catch (error) {
       console.error("Error al eliminar el empleado:", error);
       throw error;
     }
+  }
+
+  static async ACTUALIZAR_DATOS(
+    id,
+    nombre,
+    apellido,
+    email,
+    telefono,
+    fecha_contratacion,
+    salario,
+    departamento
+  ) {
+    const { rows } = await pool.query(
+      `UPDATE empleados SET nombre = $1, apellido = $2, email = $3, telefono = $4, fecha_contratacion = $5, salario = $6, departamento = $7 WHERE id = $8 RETURNING nombre, apellido, email, telefono, fecha_contratacion, salario, departamento `,
+      [
+        id,
+        nombre,
+        apellido,
+        email,
+        telefono,
+        fecha_contratacion,
+        salario,
+        departamento,
+      ]
+    );
+
+    return rows[0];
   }
 }
